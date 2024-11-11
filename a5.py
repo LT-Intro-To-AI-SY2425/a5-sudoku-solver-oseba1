@@ -125,6 +125,12 @@ class Board:
         Returns:
             True if we've placed all numbers, False otherwise
         """
+
+        if "_" in self.rows:
+            return False
+        else:
+            return True
+
         pass
 
     def update(self, row: int, column: int, assignment: int) -> None:
