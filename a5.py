@@ -116,7 +116,10 @@ class Board:
         Returns:
             True if we have failed to fill out the puzzle, False otherwise
         """
-        pass
+        if [] in self.rows:
+            return True
+        else:
+            return False
 
     def goal_test(self) -> bool:
         """Check if we've completed the puzzle (if we've placed all the numbers).
@@ -126,7 +129,7 @@ class Board:
             True if we've placed all numbers, False otherwise
         """
 
-        if "_" in self.rows:
+        if "*" in self.rows:
             return False
         else:
             return True
@@ -145,7 +148,14 @@ class Board:
             column - index of the column to assign
             assignment - value to place at given row, column coordinate
         """
-        pass
+        self.rows[row][column] = assignment
+
+        for i in range(self.size):
+            remove_if_exists(self.rows[row][i], assignment)
+            remove_if_exists(self.rows[i][column], assignment)
+
+        for i, j in self.subgrid_coordinates(row, column):
+            remove_if_exists(self.rows[i][j], assignment)
 
 
 def DFS(state: Board) -> Board:
