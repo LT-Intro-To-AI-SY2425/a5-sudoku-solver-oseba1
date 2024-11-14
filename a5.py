@@ -106,7 +106,18 @@ class Board:
         Returns:
             a tuple of row, column index identifying the most constrained cell
         """
-        pass
+        minSize = self.rows[0][0]
+        minCoords = ()
+        for i in range(self.rows):
+            for j in range(self.rows):
+                if(self.rows[i][j] is int):
+                    minSize = self.rows[i][j]
+                    minCoords = (i, j)
+                if len(self.rows[i][j]) < len(minSize):
+                    minSize = self.rows[i][j]
+                    minCoords = (i, j)
+
+        return minCoords
 
     def failure_test(self) -> bool:
         """Check if we've failed to correctly fill out the puzzle. If we find a cell
@@ -134,7 +145,6 @@ class Board:
         else:
             return True
 
-        pass
 
     def update(self, row: int, column: int, assignment: int) -> None:
         """Assigns the given value to the cell given by passed in row and column
@@ -185,7 +195,7 @@ def BFS(state: Board) -> Board:
     Returns:
         either None in the case of invalid input or a solved board
     """
-    pass
+
 
 
 if __name__ == "__main__":
