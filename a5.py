@@ -164,8 +164,20 @@ class Board:
             remove_if_exists(self.rows[row][i], assignment)
             remove_if_exists(self.rows[i][column], assignment)
 
+            if len(self.rows[row][i]) == 1:
+                self.update(row, column, assignment)
+            if len(self.rows[i][column]) == 1:
+                self.update(row, column, assignment)
+
+
         for i, j in self.subgrid_coordinates(row, column):
             remove_if_exists(self.rows[i][j], assignment)
+
+            if len(self.rows[i][j]) == 1:
+                self.update(row, column, assignment)
+
+
+        
 
 
 def DFS(state: Board) -> Board:
@@ -180,7 +192,11 @@ def DFS(state: Board) -> Board:
     Returns:
         either None in the case of invalid input or a solved board
     """
-    pass
+    target = state.find_most_constrained_cell()
+
+    #while(True):
+    state.update(state, target[0], target[1], state.rows[target[0]][target[1]][0])
+    remove_if_exists(state.rows[[target[0]][target[1]]], state.rows[target[0]][target[1]][0])
 
 
 def BFS(state: Board) -> Board:
