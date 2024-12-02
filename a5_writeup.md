@@ -25,7 +25,6 @@ After completing the assignment, answer the following reflection questions:
 
 DFS has a higher variance in its effciency on solving the puzzles. Still the average result of DFS were better than BFS. I think because the nature of sudoku restricts a lot of the possible numbers it makes it faster for DFS rather than BFS. It might be beneficial to use DFS when the tree is very deep and not very wide. Likewise it might be better to use BFS if the node tree is wider rather than deeper.
 
-
 2. How did the choice of data structures (like the Stack for DFS and Queue for BFS) impact the implementation and functionality of the algorithms? Are there alternative data structures or design patterns that could have been used to achieve the same objectives?
 
 The choice of a stack for DFS and a queue for BFS is important in defining the behavior of the algorithms. A stack in DFS makes it so that the most recent decision is explored first which supports the algorithm's depth-first nature of going forward deeper into the search tree before backtracking. In contrast a queue used in BFS ensures that all nodes at the current level of the search are explored before moving on to deeper levels. Alternative data structures like priority queues or  deques could modify the search strategy for specific problem types.
