@@ -106,18 +106,17 @@ class Board:
         Returns:
             a tuple of row, column index identifying the most constrained cell
         """
-        minSize = self.rows[0][0]
-        minCoords = ()
-        for i in self.rows:
-            for j in self.rows[0]:
-                if(self.rows[i][j] is int):
-                    minSize = self.rows[i][j]
-                    minCoords = (i, j)
-                if len(self.rows[i][j]) < len(minSize):
-                    minSize = self.rows[i][j]
-                    minCoords = (i, j)
+        mini = self.size
+        row = 0
+        column = 0
+        for i, r in enumerate(self.rows):
+            for j, col in enumerate(r):
 
-        return minCoords
+                if isinstance(col, list) and len(col) < mini:
+                    mini = len(col)
+                    row = i
+                    column = j
+        return (row, column)
 
     def failure_test(self) -> bool:
         """Check if we've failed to correctly fill out the puzzle. If we find a cell
@@ -127,10 +126,11 @@ class Board:
         Returns:
             True if we have failed to fill out the puzzle, False otherwise
         """
-        if [] in self.rows:
-            return True
-        else:
-            return False
+        for row in self.rows:
+            for col in row:
+                if col == []:
+                    return True
+        return False
 
     def goal_test(self) -> bool:
         """Check if we've completed the puzzle (if we've placed all the numbers).
@@ -140,10 +140,7 @@ class Board:
             True if we've placed all numbers, False otherwise
         """
 
-        if "*" in self.rows:
-            return False
-        else:
-            return True
+        return self.num_nums_placed == self.size * self.size
 
 
     def update(self, row: int, column: int, assignment: int) -> None:
@@ -159,22 +156,14 @@ class Board:
             assignment - value to place at given row, column coordinate
         """
         self.rows[row][column] = assignment
+        self.num_nums_placed += 1
 
         for i in range(self.size):
             remove_if_exists(self.rows[row][i], assignment)
             remove_if_exists(self.rows[i][column], assignment)
 
-            if len(self.rows[row][i]) == 1:
-                self.update(row, column, assignment)
-            if len(self.rows[i][column]) == 1:
-                self.update(row, column, assignment)
-
-
         for i, j in self.subgrid_coordinates(row, column):
             remove_if_exists(self.rows[i][j], assignment)
-
-            if len(self.rows[i][j]) == 1:
-                self.update(row, column, assignment)
 
 
         
@@ -224,16 +213,26 @@ def BFS(state: Board) -> Board:
     Returns:
         either None in the case of invalid input or a solved board
     """
+    
     q = Queue([state])
+    number = 0
 
     while not q.is_empty():
-        b: Board = q.pop()
-        if b.goal_test():
-            return b
-        
-        for i in range(len(b)):
-            row, col = b[0][i]
 
+        b: Board = q.pop()
+        number += 1
+        if b.goal_test():
+            print(f"Number of Iterations: {number}")
+            return b
+        mcc = b.find_most_constrained_cell()
+
+
+        row = mcc[0]
+        col = mcc[1]
+        for select in b.rows[row][col]:
+            cpy = copy.deepcopy(b)
+            cpy.update(row, col, select)
+            q.push(cpy)
     return None
 
 
