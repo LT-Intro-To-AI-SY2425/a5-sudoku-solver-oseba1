@@ -108,8 +108,8 @@ class Board:
         """
         minSize = self.rows[0][0]
         minCoords = ()
-        for i in range(self.rows):
-            for j in range(self.rows):
+        for i in self.rows:
+            for j in self.rows[0]:
                 if(self.rows[i][j] is int):
                     minSize = self.rows[i][j]
                     minCoords = (i, j)
@@ -224,7 +224,17 @@ def BFS(state: Board) -> Board:
     Returns:
         either None in the case of invalid input or a solved board
     """
+    q = Queue([state])
 
+    while not q.is_empty():
+        b: Board = q.pop()
+        if b.goal_test():
+            return b
+        
+        for i in range(len(b)):
+            row, col = b[0][i]
+
+    return None
 
 
 if __name__ == "__main__":
